@@ -1,0 +1,127 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+// Palette de couleurs "Banque High-Tech"
+:root {
+  --background-dark: #0a1929;      // Bleu nuit très foncé
+  --background-light: #102a43;     // Bleu nuit plus clair
+  --primary-accent: #00e5ff;       // Cyan/Turquoise vif
+  --primary-accent-hover: #84ffff;
+  --text-primary: #e6f1ff;         // Blanc cassé
+  --text-secondary: #8892b0;       // Gris-bleu clair
+  --border-color: rgba(0, 229, 255, 0.2);
+  --card-background: rgba(16, 42, 67, 0.8);
+  --warn-color: #ff8a80;
+  --success-color: #00e676;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+}
+
+.main-content {
+  padding-left: 280px; // Largeur de la sidebar
+  padding-top: 24px;
+  padding-right: 24px;
+  width: 100%;
+  transition: padding-left 0.3s ease;
+}
+
+/* Overrides Angular Material */
+.mat-mdc-card {
+  background-color: var(--card-background) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--background-light) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title,
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--primary-accent) !important;
+  color: #000 !important;
+}
+
+.mat-mdc-raised-button.mat-warn {
+  background-color: var(--warn-color) !important;
+  color: #000 !important;
+}
+
+.mat-mdc-icon-button.mat-primary, .mat-mdc-icon.mat-primary {
+  color: var(--primary-accent) !important;
+}
+
+.mat-mdc-icon-button.mat-warn, .mat-mdc-icon.mat-warn {
+  color: var(--warn-color) !important;
+}
+
+/* Styles pour les formulaires */
+.mat-mdc-form-field {
+  .mdc-text-field--outlined .mdc-notched-outline > * {
+    border-color: var(--border-color) !important;
+  }
+  &:hover .mdc-text-field--outlined .mdc-notched-outline > * {
+    border-color: var(--primary-accent) !important;
+  }
+  .mdc-floating-label {
+    color: var(--text-secondary) !important;
+  }
+  .mat-mdc-input-element, .mat-mdc-select-value {
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-form-field-icon-suffix, .mat-mdc-select-arrow {
+    color: var(--text-secondary) !important;
+  }
+}
+
+/* Styles pour les tables */
+.mat-mdc-table {
+  background-color: transparent !important;
+  .mat-mdc-header-cell {
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .mat-mdc-cell {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+  }
+  .mat-mdc-row:hover {
+    background-color: rgba(0, 229, 255, 0.05);
+  }
+}
+
+.mat-mdc-paginator {
+  background-color: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

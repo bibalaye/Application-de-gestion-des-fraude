@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      routes:
+        # User Service - Authentication endpoints (public)
+        - id: user-service-auth
+          uri: http://user-service:8081
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /auth/${segment}
+        
+        # User Service - Protected endpoints
+        - id: user-service
+          uri: http://user-service:8081
+          predicates:
+            - Path=/api/users/**,/api/roles/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /${segment}
+        
+        # Alert Service
+        - id: alert-service
+          uri: http://alert-service:8082
+          predicates:
+            - Path=/api/alerts/**
+          filters:
+            - RewritePath=/api/alerts/?(?<segment>.*), /alerts/${segment}
+        
+        # Ingestion Service
+        - id: ingestion-service
+          uri: http://ingestion-service:8083
+          predicates:
+            - Path=/api/ingest/**
+          filters:
+            - RewritePath=/api/ingest/(?<segment>.*), /ingest/${segment}
+
+# JWT Configuration - Must match user-service
+jwt:
+  secret: your-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+  expiration: 86400000

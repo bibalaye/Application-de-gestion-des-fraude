@@ -1,0 +1,68 @@
+<mat-card class="ingestion-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar color="primary">cloud_upload</mat-icon>
+    <mat-card-title>Ingestion des transactions</mat-card-title>
+    <mat-card-subtitle>Importez et analysez vos fichiers de transactions en toute sécurité</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="file-upload-container">
+      <input type="file" id="file-input" (change)="onFileSelected($event)" accept=".csv,.json" class="file-input" hidden>
+      <label for="file-input" class="file-label mat-elevation-z2">
+        <mat-icon>attach_file</mat-icon>
+        <span>{{ fileName || 'Choisir un fichier' }}</span>
+      </label>
+      <span *ngIf="fileName" class="file-info">
+        <mat-icon color="accent">check_circle</mat-icon>
+        Fichier sélectionné : <b>{{ fileName }}</b>
+      </span>
+    </div>
+
+    <div *ngIf="transactions.length > 0" class="preview-container">
+      <mat-divider></mat-divider>
+      <h4>Aperçu du fichier</h4>
+      <table class="preview-table">
+        <thead>
+          <tr>
+            <th *ngFor="let header of tableHeaders">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of transactions | slice:0:2">
+            <td *ngFor="let header of tableHeaders">{{ row[header] }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <small class="preview-note">Aperçu des 2 premières lignes</small>
+      <button mat-raised-button color="primary" (click)="ingestTransactions()" [disabled]="isLoading">
+        <mat-icon>play_arrow</mat-icon>
+        <span *ngIf="!isLoading">Traiter les transactions</span>
+        <mat-spinner *ngIf="isLoading" [diameter]="24"></mat-spinner>
+      </button>
+    </div>
+
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+
+    <div *ngIf="message" class="message-container" [ngClass]="messageType">
+      <mat-icon *ngIf="messageType === 'success'" color="primary">check_circle</mat-icon>
+      <mat-icon *ngIf="messageType === 'error'" color="warn">error</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+
+    <div *ngIf="predictions.length > 0" class="result-container">
+      <mat-divider></mat-divider>
+      <h3>Résultats de l'ingestion</h3>
+      <div class="result-summary">
+        <span class="result-badge" matBadge="{{ predictions.length }}" matBadgeColor="primary">Transactions traitées</span>
+        <span class="result-badge" matBadge="{{ alertCount }}" matBadgeColor="warn">Alertes générées</span>
+      </div>
+      <div class="apercu-utilisateur">
+        <mat-icon color="warn" *ngIf="alertCount > 0">warning</mat-icon>
+        <mat-icon color="primary" *ngIf="alertCount === 0">check_circle</mat-icon>
+        <span>
+          {{ alertCount > 0 ? 'Des transactions suspectes ont été détectées et des alertes ont été générées.' : 'Aucune transaction suspecte détectée.' }}
+        </span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
