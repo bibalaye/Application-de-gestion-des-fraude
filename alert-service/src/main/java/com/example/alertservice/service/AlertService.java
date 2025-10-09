@@ -1,10 +1,13 @@
 package com.example.alertservice.service;
 
 import com.example.alertservice.dto.DashboardKPIs;
+import com.example.alertservice.dto.UserKPIs;
 import com.example.alertservice.model.Alert;
 import com.example.alertservice.Repository.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +16,12 @@ import java.util.List;
 public class AlertService {
     @Autowired
     private AlertRepository alertRepository;
+    
+    @Autowired
+    private RestTemplate restTemplate;
+    
+    @Value("${user.service.url:http://user-service:8081}")
+    private String userServiceUrl;
 
     public Alert createAlert(Alert alertData) {
         alertData.setCreatedAt(LocalDateTime.now());
@@ -63,20 +72,33 @@ public class AlertService {
 
         double detectionRate = (totalAlerts > 0) ? (double) fraudulentAlerts / totalAlerts * 100 : 0;
 
-        // Placeholder values for users, as this service doesn't manage users
-        long totalUsers = 0; 
-        long activeUsers = 0; 
-
+        // Fetch user KPIs from user-service
+        UserKPIs userKPIs = fetchUserKPIs();
+        
         return new DashboardKPIs(
                 newAlerts,
                 inInvestigation,
                 resolvedToday,
                 detectionRate,
-                totalUsers,
-                activeUsers,
+                userKPIs.getTotalUsers(),
+                userKPIs.getActiveUsers(),
+                userKPIs.getInactiveUsers(),
+                userKPIs.getNewUsersToday(),
+                userKPIs.getAdminUsers(),
+                userKPIs.getRegularUsers(),
                 totalAlerts,
                 fraudulentAlerts,
                 nonFraudulentAlerts
         );
+    }
+    
+    private UserKPIs fetchUserKPIs() {
+        try {
+            String url = userServiceUrl + "/users/dashboard/kpis";
+            return restTemplate.getForObject(url, UserKPIs.class);
+        } catch (Exception e) {
+            // Return default values if user-service is unavailable
+            return new UserKPIs(0, 0, 0, 0, 0, 0);
+        }
     }
 }

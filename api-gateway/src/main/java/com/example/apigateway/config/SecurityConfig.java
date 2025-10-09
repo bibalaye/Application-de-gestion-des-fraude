@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable()) // CORS is handled by CorsConfig
+            .cors(cors -> {}) // Enable CORS (configured in CorsConfig)
             .authorizeExchange(exchanges -> exchanges
                 // Public endpoints - authentication
                 .pathMatchers("/api/auth/**").permitAll()

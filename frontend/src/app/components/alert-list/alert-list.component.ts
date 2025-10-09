@@ -139,171 +139,283 @@ import { MatPaginator } from '@angular/material/paginator';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      background: #1a202c;
+      min-height: calc(100vh - 64px);
+      padding: 0;
+    }
+
     .alert-list-container {
-      padding: 20px;
-      max-width: 1400px;
+      padding: 40px 30px;
+      max-width: 1600px;
       margin: 0 auto;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .header {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       text-align: center;
+      padding: 40px 20px;
+      background: #2d3748;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .header h1 {
-      color: #1976d2;
-      margin-bottom: 8px;
+      font-size: 3em;
+      font-weight: 800;
+      color: #00e5ff;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
     }
 
     .subtitle {
-      color: #666;
-      font-size: 16px;
+      color: #90a4ae;
+      font-size: 1.2em;
+      font-weight: 500;
+    }
+
+    .alert-section {
+      margin-bottom: 50px;
+      background: #2d3748;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .alert-section h2 {
+      font-size: 2.2em;
+      font-weight: 700;
+      color: #00e5ff;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid rgba(0, 229, 255, 0.3);
+    }
+
+    .alert-section h2::before {
+      content: '';
+      width: 6px;
+      height: 40px;
+      background: #00e5ff;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
     }
 
     .alert-card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
+      margin-top: 30px;
     }
 
     .alert-card {
       cursor: pointer;
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      background: #1e2936;
+      border: 2px solid rgba(0, 229, 255, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .alert-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #00e5ff 0%, #00b8d4 100%);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .alert-card:hover::before {
+      transform: scaleX(1);
     }
 
     .alert-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 229, 255, 0.3);
+      border-color: #00e5ff;
     }
 
     .alert-card mat-card-header {
-      padding-bottom: 0;
+      padding: 20px 20px 0 20px;
+      background: rgba(0, 229, 255, 0.05);
     }
 
     .alert-title {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.2em;
-      font-weight: 600;
-      color: #3f51b5;
+      gap: 12px;
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #ffffff;
     }
 
     .alert-title mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      padding: 6px;
+      border-radius: 10px;
+      background: rgba(0, 229, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .severity-icon-HIGH {
-      color: #f44336;
+      color: #ef4444;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
     }
 
     .severity-icon-MEDIUM {
-      color: #ff9800;
+      color: #f59e0b;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
     }
 
     .severity-icon-LOW {
-      color: #4caf50;
+      color: #10b981;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
     }
 
     .alert-card mat-card-subtitle {
-      color: #777;
+      color: #90a4ae;
+      font-weight: 600;
+      margin-top: 8px;
     }
 
     .alert-card mat-card-content {
-      padding-top: 10px;
+      padding: 20px;
       flex-grow: 1;
     }
 
     .alert-card mat-card-content p {
-      margin-bottom: 5px;
-      font-size: 0.9em;
+      margin-bottom: 12px;
+      font-size: 0.95em;
+      color: #b0bec5;
+      line-height: 1.6;
+    }
+
+    .alert-card mat-card-content p strong {
+      color: #ffffff;
+      font-weight: 700;
     }
 
     .alert-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 15px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 2px dashed rgba(255, 255, 255, 0.1);
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
     .alert-meta mat-chip-listbox {
       display: flex;
-      gap: 5px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .alert-meta mat-chip {
+      font-weight: 700;
+      font-size: 0.85em;
+      padding: 8px 16px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
     }
 
     .created-at {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-size: 0.8em;
-      color: #888;
+      gap: 6px;
+      font-size: 0.85em;
+      color: #90a4ae;
+      font-weight: 600;
+    }
+
+    .created-at mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
 
     .alert-actions {
-      padding: 16px;
+      padding: 16px 20px;
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
-      border-top: 1px solid #eee;
+      gap: 12px;
+      background: rgba(0, 229, 255, 0.03);
+      border-top: 2px solid rgba(255, 255, 255, 0.1);
     }
 
     .alert-actions button {
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 10px;
+      padding: 8px 16px;
     }
 
     /* Severity Chips */
     .severity-HIGH {
-      background-color: #ffebee;
-      color: #d32f2f;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #dc2626;
+      border: 2px solid #fca5a5;
     }
 
     .severity-MEDIUM {
-      background-color: #fff3e0;
-      color: #f57c00;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #d97706;
+      border: 2px solid #fcd34d;
     }
 
     .severity-LOW {
-      background-color: #e8f5e8;
-      color: #388e3c;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #059669;
+      border: 2px solid #6ee7b7;
     }
 
     /* Status Chips */
     .status-NOUVELLE {
-      background-color: #ffecb3;
-      color: #f57c00;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #d97706;
+      border: 2px solid #fcd34d;
     }
 
     .status-EN_COURS {
-      background-color: #e3f2fd;
-      color: #1976d2;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      color: #1d4ed8;
+      border: 2px solid #93c5fd;
     }
 
     .status-CLOTUREE_FRAUDE {
-      background-color: #ffebee;
-      color: #d32f2f;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #dc2626;
+      border: 2px solid #fca5a5;
     }
 
     .status-CLOTUREE_NON_FRAUDE {
-      background-color: #e8f5e8;
-      color: #388e3c;
-    }
-
-    @media (max-width: 768px) {
-      .alert-list-container {
-        padding: 16px;
-      }
-      .alert-card-grid {
-        grid-template-columns: 1fr;
-      }
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #059669;
+      border: 2px solid #6ee7b7;
     }
 
     .no-alerts-message {
@@ -311,40 +423,73 @@ import { MatPaginator } from '@angular/material/paginator';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
-      color: #666;
+      padding: 60px 40px;
+      color: #90a4ae;
       text-align: center;
+      background: rgba(0, 229, 255, 0.05);
+      border-radius: 16px;
+      border: 2px dashed rgba(0, 229, 255, 0.3);
     }
 
     .no-alerts-message mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      color: #ccc;
-      margin-bottom: 10px;
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: rgba(0, 229, 255, 0.5);
+      margin-bottom: 16px;
     }
 
     .no-alerts-message p {
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-
-    .alert-section {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-    }
-
-    .alert-section h2 {
-      color: #1976d2;
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: 1.8em;
+      margin-bottom: 0;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #ffffff;
     }
 
     .archived-alerts {
-      opacity: 0.7;
-      filter: grayscale(50%);
+      opacity: 0.85;
+    }
+
+    .archived-alerts .alert-card {
+      filter: grayscale(20%);
+    }
+
+    mat-paginator {
+      background: rgba(0, 0, 0, 0.2);
+      color: #ffffff;
+      margin-top: 30px;
+      border-radius: 12px;
+    }
+
+    :host ::ng-deep .mat-mdc-paginator {
+      background: transparent;
+      color: #ffffff;
+    }
+
+    :host ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
+      color: #00e5ff;
+    }
+
+    @media (max-width: 768px) {
+      .alert-list-container {
+        padding: 24px 16px;
+      }
+      .alert-card-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .header {
+        padding: 30px 16px;
+      }
+      .header h1 {
+        font-size: 2.2em;
+      }
+      .alert-section {
+        padding: 24px;
+      }
+      .alert-section h2 {
+        font-size: 1.8em;
+      }
     }
   `]
 })

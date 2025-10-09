@@ -4,13 +4,14 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { User, Role, UserUpdate } from '../../models/user.model';
 import { Store } from '@ngrx/store';
 import * as UserActions from '../../store/user.actions';
 import { UserDialogComponent } from './user-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { selectRoles } from '../../store/user.selectors';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-user-details-dialog',
@@ -19,7 +20,8 @@ import { Observable } from 'rxjs';
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ],
   template: `
     <h1 mat-dialog-title class="dialog-title">Détails de l'utilisateur</h1>
@@ -59,14 +61,24 @@ import { Observable } from 'rxjs';
     </div>
     <div mat-dialog-actions align="end" class="dialog-actions">
       <button mat-button (click)="onClose()">Fermer</button>
-      <button mat-raised-button color="primary" (click)="onEdit()">
+      <button mat-raised-button color="primary" 
+              (click)="onEdit()"
+              [disabled]="isProtectedUser()"
+              [matTooltip]="isProtectedUser() ? 'Utilisateur protégé - Modification interdite' : ''">
         <mat-icon>edit</mat-icon> Modifier
       </button>
-      <button mat-raised-button [color]="data.user.status === 'ACTIVE' ? 'warn' : 'accent'" (click)="onToggleStatus()">
+      <button mat-raised-button 
+              [color]="data.user.status === 'ACTIVE' ? 'warn' : 'accent'" 
+              (click)="onToggleStatus()"
+              [disabled]="isProtectedUser()"
+              [matTooltip]="isProtectedUser() ? 'Utilisateur protégé - Changement de statut interdit' : ''">
         <mat-icon>{{ data.user.status === 'ACTIVE' ? 'block' : 'check_circle' }}</mat-icon>
         {{ data.user.status === 'ACTIVE' ? 'Désactiver' : 'Activer' }}
       </button>
-      <button mat-raised-button color="accent" (click)="onDelete()">
+      <button mat-raised-button color="accent" 
+              (click)="onDelete()"
+              [disabled]="isProtectedUser()"
+              [matTooltip]="isProtectedUser() ? 'Utilisateur protégé - Suppression interdite' : ''">
         <mat-icon>delete</mat-icon> Supprimer
       </button>
     </div>
@@ -156,6 +168,9 @@ import { Observable } from 'rxjs';
 })
 export class UserDetailsDialogComponent {
   roles$: Observable<Role[]> = this.store.select(selectRoles);
+  
+  // Protected user that cannot be modified or deleted
+  private readonly PROTECTED_USERNAME = 'bibou';
 
   constructor(
     public dialogRef: MatDialogRef<UserDetailsDialogComponent>,
@@ -164,12 +179,22 @@ export class UserDetailsDialogComponent {
     private dialog: MatDialog
   ) {}
 
+  isProtectedUser(): boolean {
+    return this.data.user.username.toLowerCase() === this.PROTECTED_USERNAME.toLowerCase();
+  }
+
   onClose(): void {
     this.dialogRef.close();
   }
 
   onEdit(): void {
-    this.roles$.subscribe(roles => {
+    // Block editing protected user
+    if (this.isProtectedUser()) {
+      return;
+    }
+
+    // Use take(1) to automatically unsubscribe after first emission
+    this.roles$.pipe(take(1)).subscribe(roles => {
       const dialogRef = this.dialog.open(UserDialogComponent, {
         width: '450px',
         data: { user: this.data.user, roles, editMode: true }
@@ -195,6 +220,11 @@ export class UserDetailsDialogComponent {
   }
 
   onDelete(): void {
+    // Block deleting protected user
+    if (this.isProtectedUser()) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: { title: 'Confirmer la suppression', message: `Voulez-vous vraiment supprimer l'utilisateur ${this.data.user.username} ?` }
@@ -209,6 +239,11 @@ export class UserDetailsDialogComponent {
   }
 
   onToggleStatus(): void {
+    // Block status change for protected user
+    if (this.isProtectedUser()) {
+      return;
+    }
+
     const newStatus = this.data.user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     const message = `Voulez-vous vraiment ${newStatus === 'ACTIVE' ? 'activer' : 'désactiver'} l'utilisateur ${this.data.user.username} ?`;
 

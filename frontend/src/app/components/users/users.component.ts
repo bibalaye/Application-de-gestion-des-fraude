@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { User, Role, UserCreate, UserUpdate } from '../../models/user.model';
 import { selectUsers, selectRoles, selectUserLoading, selectUserTotal, selectUserPage, selectUserPageSize, selectUserSearch } from '../../store/user.selectors';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserDialogComponent } from './user-dialog.component';
 
 @Component({
@@ -39,7 +40,8 @@ import { UserDialogComponent } from './user-dialog.component';
     MatCardModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   template: `
     <div class="container">
@@ -77,13 +79,21 @@ import { UserDialogComponent } from './user-dialog.component';
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let user">
-                  <button mat-icon-button color="primary" (click)="openUserDialog(user)">
+                  <button mat-icon-button color="primary" 
+                          (click)="openUserDialog(user)"
+                          [disabled]="isProtectedUser(user)"
+                          [matTooltip]="isProtectedUser(user) ? 'Utilisateur protégé - Modification interdite' : 'Modifier'">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button mat-icon-button color="warn" (click)="openDeleteDialog(user)">
+                  <button mat-icon-button color="warn" 
+                          (click)="openDeleteDialog(user)"
+                          [disabled]="isProtectedUser(user)"
+                          [matTooltip]="isProtectedUser(user) ? 'Utilisateur protégé - Suppression interdite' : 'Supprimer'">
                     <mat-icon>delete_outline</mat-icon>
                   </button>
-                  <button mat-icon-button color="info" (click)="openUserDetailsDialog(user)">
+                  <button mat-icon-button color="info" 
+                          (click)="openUserDetailsDialog(user)"
+                          matTooltip="Voir les détails">
                     <mat-icon>info</mat-icon>
                   </button>
                 </td>
@@ -136,12 +146,19 @@ export class UsersComponent implements OnInit {
   displayedColumns = ['username', 'email', 'role', 'actions'];
   search = '';
 
+  // Protected user that cannot be modified or deleted
+  private readonly PROTECTED_USERNAME = 'bibou';
+
   constructor(private store: Store, public dialog: MatDialog) {}
+
+  isProtectedUser(user: User): boolean {
+    return user.username.toLowerCase() === this.PROTECTED_USERNAME.toLowerCase();
+  }
 
   ngOnInit() {
     this.store.dispatch(UserActions.loadUsers());
     this.store.dispatch(UserActions.loadRoles());
-    this.search$.subscribe(s => this.search = s);
+    this.search$.pipe(take(1)).subscribe(s => this.search = s);
   }
 
   onSearchChange() {
@@ -154,12 +171,18 @@ export class UsersComponent implements OnInit {
   }
 
   openUserDialog(user: User | null = null): void {
+    // Block editing protected user
+    if (user && this.isProtectedUser(user)) {
+      return;
+    }
+
     // Prevent opening multiple dialogs
     if (this.dialog.openDialogs.length > 0) {
       return;
     }
 
-    this.roles$.subscribe(roles => {
+    // Use take(1) to automatically unsubscribe after first emission
+    this.roles$.pipe(take(1)).subscribe(roles => {
       const dialogRef = this.dialog.open(UserDialogComponent, {
         width: '450px',
         data: { user, roles, editMode: !!user }
@@ -201,6 +224,11 @@ export class UsersComponent implements OnInit {
   }
 
   openDeleteDialog(user: User): void {
+    // Block deleting protected user
+    if (this.isProtectedUser(user)) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: { title: 'Confirmer la suppression', message: `Voulez-vous vraiment supprimer l'utilisateur ${user.username} ?` }

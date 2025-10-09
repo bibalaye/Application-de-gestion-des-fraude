@@ -41,4 +41,9 @@ export class AlertService {
     }
     return this.http.put<Alert>(`${this.apiUrl}/${id}/qualify`, {}, { params });
   }
+
+  // Récupérer les KPIs du dashboard
+  getDashboardKPIs(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dashboard/kpis`);
+  }
 }

@@ -98,83 +98,118 @@ import { MatDividerModule } from '@angular/material/divider';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      background: #1a202c;
+      min-height: calc(100vh - 64px);
+    }
+
     .alert-investigation-container {
-      padding: 20px;
-      max-width: 900px;
+      padding: 40px 30px;
+      max-width: 1000px;
       margin: 0 auto;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       text-align: center;
       position: relative;
-      justify-content: center;
+      padding: 40px 20px;
+      background: #2d3748;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .header h1 {
-      color: #1976d2;
+      color: #00e5ff;
       margin: 0;
-      font-size: 2em;
+      font-size: 3em;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
     }
 
     .header .subtitle {
-      color: #666;
-      font-size: 16px;
-      margin-top: 5px;
-      width: 100%;
-      text-align: center;
+      color: #90a4ae;
+      font-size: 1.2em;
+      margin-top: 12px;
+      font-weight: 500;
     }
 
     .back-button {
       position: absolute;
-      left: 0;
-      color: #1976d2;
+      left: 20px;
+      top: 20px;
+      color: #00e5ff;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+
+    .back-button:hover {
+      background: rgba(0, 229, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
     }
 
     .alert-details-card {
       margin-top: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      background: #2d3748;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
     }
 
     .alert-details-card mat-card-header {
-      background-color: #e3f2fd;
-      padding: 20px;
-      border-bottom: 1px solid #bbdefb;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      background: rgba(0, 229, 255, 0.05);
+      padding: 30px;
+      border-bottom: 2px solid rgba(0, 229, 255, 0.3);
     }
 
     .alert-details-card mat-card-title {
-      font-size: 24px;
-      margin-bottom: 5px;
-      color: #1976d2;
+      font-size: 2em;
+      margin-bottom: 8px;
+      color: #00e5ff;
+      font-weight: 700;
     }
 
     .alert-details-card mat-card-subtitle {
-      color: #555;
+      color: #90a4ae;
+      font-size: 1.1em;
     }
 
     .alert-details-card mat-card-content {
-      padding: 20px;
+      padding: 30px;
     }
 
     .details-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 20px;
+      margin-bottom: 30px;
     }
 
     .details-grid div {
-      padding: 8px 0;
-      border-bottom: 1px dashed #eee;
+      padding: 12px 16px;
+      background: rgba(0, 229, 255, 0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      color: #ffffff;
     }
 
-    .details-grid div:last-child {
-      border-bottom: none;
+    .details-grid div strong {
+      color: #00e5ff;
+      display: block;
+      margin-bottom: 4px;
     }
 
     .details-grid .full-width {
@@ -182,28 +217,37 @@ import { MatDividerModule } from '@angular/material/divider';
     }
 
     .section-divider {
-      margin: 25px 0;
+      margin: 30px 0;
+      border-color: rgba(0, 229, 255, 0.3);
     }
 
     .qualify-title {
-      margin-top: 20px;
-      margin-bottom: 15px;
-      color: #1976d2;
-      font-size: 1.5em;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      color: #00e5ff;
+      font-size: 1.8em;
       text-align: center;
+      font-weight: 700;
     }
 
     .qualify-form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
       padding: 0 20px;
     }
 
     .qualify-button {
       align-self: flex-end;
-      padding: 10px 25px;
+      padding: 12px 30px;
       font-size: 16px;
+      font-weight: 700;
+      background: #00e5ff;
+      color: #1a202c;
+    }
+
+    .qualify-button:hover {
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
     }
 
     .processed-message {
@@ -212,25 +256,26 @@ import { MatDividerModule } from '@angular/material/divider';
       align-items: center;
       justify-content: center;
       padding: 40px;
-      color: #4CAF50;
+      color: #00e5ff;
       text-align: center;
-      background-color: #e8f5e8;
-      border-radius: 8px;
+      background: rgba(0, 229, 255, 0.1);
+      border-radius: 16px;
       margin-top: 20px;
-      border: 1px solid #c8e6c9;
+      border: 2px solid rgba(0, 229, 255, 0.3);
     }
 
     .processed-message mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      color: #4CAF50;
-      margin-bottom: 10px;
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #00e5ff;
+      margin-bottom: 16px;
     }
 
     .processed-message p {
-      font-size: 1.1em;
-      font-weight: 500;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #ffffff;
     }
 
     .no-alert-message {
@@ -238,59 +283,124 @@ import { MatDividerModule } from '@angular/material/divider';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
-      color: #666;
+      padding: 60px 40px;
+      color: #90a4ae;
       text-align: center;
       margin-top: 20px;
+      background: #2d3748;
+      border-radius: 20px;
+      border: 2px dashed rgba(0, 229, 255, 0.3);
     }
 
     .no-alert-message mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      color: #ccc;
-      margin-bottom: 10px;
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: rgba(0, 229, 255, 0.5);
+      margin-bottom: 16px;
+    }
+
+    .no-alert-message p {
+      color: #ffffff;
+      font-size: 1.1em;
+      font-weight: 600;
     }
 
     /* Chip-like styles for status and severity */
-    .status-CLOTUREE_FRAUDE, .status-CLOTUREE_NON_FRAUDE {
-      background-color: #d32f2f;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+    .status-CLOTUREE_FRAUDE {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #dc2626;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #fca5a5;
     }
 
-    .status-NOUVELLE, .status-EN_COURS {
-      background-color: #1976d2;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+    .status-CLOTUREE_NON_FRAUDE {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #059669;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #6ee7b7;
+    }
+
+    .status-NOUVELLE {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #d97706;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #fcd34d;
+    }
+
+    .status-EN_COURS {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #93c5fd;
     }
 
     .severity-HIGH {
-      background-color: #f44336;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #dc2626;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #fca5a5;
     }
 
     .severity-MEDIUM {
-      background-color: #ff9800;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #d97706;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #fcd34d;
     }
 
     .severity-LOW {
-      background-color: #4caf50;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #059669;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      border: 2px solid #6ee7b7;
+    }
+
+    :host ::ng-deep .mat-mdc-form-field {
+      .mdc-text-field--outlined .mdc-notched-outline > * { 
+        border-color: rgba(0, 229, 255, 0.3) !important; 
+      }
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline > * { 
+        border-color: #00e5ff !important; 
+      }
+      .mdc-floating-label { 
+        color: #90a4ae !important; 
+      }
+    }
+
+    :host ::ng-deep .mat-mdc-input-element,
+    :host ::ng-deep .mat-mdc-select-value {
+      color: #ffffff !important;
+    }
+
+    :host ::ng-deep .mat-mdc-select-arrow {
+      color: #00e5ff;
+    }
+
+    @media (max-width: 768px) {
+      .alert-investigation-container {
+        padding: 24px 16px;
+      }
+      .header h1 {
+        font-size: 2.2em;
+      }
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
     }
   `]
 })

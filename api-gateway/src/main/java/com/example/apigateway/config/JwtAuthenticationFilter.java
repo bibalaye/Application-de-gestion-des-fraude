@@ -30,7 +30,10 @@ public class JwtAuthenticationFilter implements WebFilter {
         String path = exchange.getRequest().getPath().value();
         
         // Skip authentication for public endpoints
-        if (path.startsWith("/api/auth/")) {
+        if (path.startsWith("/api/auth/") || 
+            path.startsWith("/v3/api-docs") || 
+            path.startsWith("/swagger-ui")) {
+            log.debug("Skipping JWT validation for public path: {}", path);
             return chain.filter(exchange);
         }
 
@@ -38,8 +41,8 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Missing or invalid Authorization header for path: {}", path);
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            // Don't block, let Spring Security handle it
+            return chain.filter(exchange);
         }
 
         String token = authHeader.substring(7);

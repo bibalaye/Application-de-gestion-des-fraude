@@ -7,18 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DashboardKPIs {
-    private long newAlerts;
-    private long inInvestigation;
-    private long resolvedToday;
-    private double detectionRate;
+public class UserKPIs {
     private long totalUsers;
     private long activeUsers;
     private long inactiveUsers;
     private long newUsersToday;
     private long adminUsers;
     private long regularUsers;
-    private long totalAlerts;
-    private long fraudulentAlerts;
-    private long nonFraudulentAlerts;
 }

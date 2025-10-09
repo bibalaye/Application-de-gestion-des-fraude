@@ -53,4 +53,16 @@ export class AlertEffects {
       )
     )
   );
+
+  loadDashboardKPIs$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AlertActions.loadDashboardKPIs),
+      switchMap(() =>
+        this.alertService.getDashboardKPIs().pipe(
+          map(kpis => AlertActions.loadDashboardKPIsSuccess({ kpis })),
+          catchError(error => of(AlertActions.loadDashboardKPIsFailure({ error: error.message })))
+        )
+      )
+    )
+  );
 }
